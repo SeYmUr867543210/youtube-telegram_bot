@@ -25,8 +25,7 @@ bot.on("message", (msg) => {
 
 //using channelsId,gettings channel allVideosId
 function getVideosId() {
-    let imSearchingFor = "contentDetails"; //to get all playLists from a channel
-    const url = `${baseApiUrl}/channels?key=${myApiKEY}&id=${channelId}&part=${imSearchingFor}`
+    const url = `${baseApiUrl}/channels?key=${myApiKEY}&id=${channelId}&part=contentDetails`
     axios.get(url)
         .then(function(response) {
             allVideosId = response.data.items[0].contentDetails.relatedPlaylists.uploads;
@@ -37,8 +36,7 @@ getVideosId()
 
 
 function getVids(allVideosId, repeatRequest) { //false
-    let imSearchingFor = "snippet";
-    const url = `${baseApiUrl}/playlistItems?key=${myApiKEY}&playlistId=${allVideosId}&maxResults=${videosCount}&part=${imSearchingFor}`
+    const url = `${baseApiUrl}/playlistItems?key=${myApiKEY}&playlistId=${allVideosId}&maxResults=${videosCount}&part=snippet`
     let videos = axios.get(url);
     if (!repeatRequest) {
         videos.then(response => {
