@@ -2,9 +2,9 @@ const axios = require("axios");
 const TelegramBot = require("node-telegram-bot-api");
 
 // //youtube paramts
-const myApiKEY = "AIzaSyAPx1ETtAaBo1qze17ryHo9TGb_DYCVaVs";
+const myApiKey = "AIzaSyAPx1ETtAaBo1qze17ryHo9TGb_DYCVaVs";
 const baseApiUrl = "https://www.googleapis.com/youtube/v3";
-const searchingChannelsName = "Samchik"; //
+const channelName = "Samchik"; //
 const channelId = "UCHTWv0QpQ7HTDp_0gU4eJhQ";
 let allVideosId;
 const videosCount = 3;
@@ -14,27 +14,30 @@ const TOKEN = "2026123924:AAGyg05JpAsdggz6vGnF2LwBCz5flSElsA0";
 const bot = new TelegramBot(TOKEN, {
     polling: true
 })
-let msgChatId = 638348035;
+let msgChatId;
 bot.on("message", (msg) => {
     msgChatId = msg.chat.id;
 })
 
 //using channelsId,gettings channel allVideosId
-let imSearchingFor = "contentDetails"; //to get all playLists from a channel
-
-axios.get(`${baseApiUrl}/channels?key=${myApiKEY}&id=${channelId}&part=${imSearchingFor}`)
-    .then(function(response) {
-        allVideosId = response.data.items[0].contentDetails.relatedPlaylists.uploads;
-        getVids(allVideosId); //
-    })
+function getVideosId() {
+    let imSearchingFor = "contentDetails"; //to get all playLists from a channel
+    const url = `${baseApiUrl}/channels?key=${myApiKEY}&id=${channelId}&part=${imSearchingFor}`
+    axios.get(url)
+        .then(function(response) {
+            allVideosId = response.data.items[0].contentDetails.relatedPlaylists.uploads;
+            getVids(allVideosId);
+        })
+};
+getVideosId()
 
 let prevVids = []; //all videos from a channel considering "resultsCount"
 let currentVids = [];
 
 function getVids(allVideosId, repeatRequest) { //false
     let imSearchingFor = "snippet";
-
-    let videos = axios.get(`${baseApiUrl}/playlistItems?key=${myApiKEY}&playlistId=${allVideosId}&maxResults=${videosCount}&part=${imSearchingFor}`);
+    const url = `${baseApiUrl}/playlistItems?key=${myApiKEY}&playlistId=${allVideosId}&maxResults=${videosCount}&part=${imSearchingFor}`
+    let videos = axios.get(url);
     if (!repeatRequest) {
         videos.then(response => {
             pushDataToArrObj(response.data, prevVids);
