@@ -8,13 +8,17 @@ const channelName = "Samchik"; //
 const channelId = "UCHTWv0QpQ7HTDp_0gU4eJhQ";
 let allVideosId;
 const videosCount = 3;
+let prevVids = []; //all videos from a channel considering "resultsCount"
+let currentVids = [];
 
 //telegram paramts
 const TOKEN = "2026123924:AAGyg05JpAsdggz6vGnF2LwBCz5flSElsA0";
+let msgChatId;
+
 const bot = new TelegramBot(TOKEN, {
     polling: true
 })
-let msgChatId;
+
 bot.on("message", (msg) => {
     msgChatId = msg.chat.id;
 })
@@ -31,8 +35,6 @@ function getVideosId() {
 };
 getVideosId()
 
-let prevVids = []; //all videos from a channel considering "resultsCount"
-let currentVids = [];
 
 function getVids(allVideosId, repeatRequest) { //false
     let imSearchingFor = "snippet";
@@ -109,7 +111,7 @@ function tgBotSendALert(videos, youtubeVids) {
 }
 
 
-//ne mogu ponyat pochemu pri udalenii video s youtube,code zahodit v block "if (added.length > 0) na 76 strochke"
+//ne mogu ponyat pochemu pri udalenii video s youtube,code zahodit v block "if (added.length > 0) na 82 strochke"
 
 
 
